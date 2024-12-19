@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 public class Grass implements Tile{
 
     private final String id;
+    private final int scale = 1;
 
     private final String atlasPath;
     private float x = 0;
@@ -45,11 +46,11 @@ public class Grass implements Tile{
     @Override
     public Sprite getSprite() {
         //ToDo grass will be animated, this is just place holder
-        Sprite tmp = new Sprite(this.atlas.findRegion("grass_bg").getTexture());
+        Sprite tmp = new Sprite(this.atlas.createSprite("grass_bg"));
         // grass tile was multiplied only 2x
         tmp.setSize(1, 1);
-        tmp.translateX(this.x/2);
-        tmp.translateY(this.y);
+        tmp.translateX(this.x/scale);
+        tmp.translateY(this.y/scale);
         return tmp;
     }
 

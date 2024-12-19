@@ -1,5 +1,7 @@
 background.png
-size:256,256
+size:512,512
 repeat:none
 grass_bg
 bounds:2,2,128,128
+oak
+bounds:2,132,256,256

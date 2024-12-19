@@ -5,10 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.lumberdream.handlers.InputHandler;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class Player implements Entity {
@@ -22,9 +22,11 @@ public class Player implements Entity {
     private String id = "";
     private float x = 0; // not pixels but tiles
     private float y = 0; // not pixels but tiles
+    private float previousX = 0;
+    private float previousY = 0;
+    private float sizeX = 1;
+    private float sizeY = 1;
     private final float speed = 1.5f;
-    private float textureHeight = 0;
-    private float textureWidth = 0;
 
     private final float frameTime = 1 / 15f;
     private float elapseTime = 0;
@@ -33,14 +35,30 @@ public class Player implements Entity {
     private TextureAtlas atlas;
     private String currentAnimation = idleAnimation;
 
-    public Player(String id, String atlasPath) {
+    private Rectangle hitBox;
+
+    public Player(
+        String id,
+        String atlasPath,
+        float x,
+        float y,
+        float sizeX,
+        float sizeY
+    ) {
         this.id = id;
         this.atlasPath = atlasPath;
+        this.x = x;
+        this.y = y;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.hitBox = new Rectangle(x, y, sizeX, sizeY);
         this.load();
-
     }
 
     public void update(Map<String, Boolean> inputMap) {
+
+        this.previousX = x;
+        this.previousY = y;
 
         float deltaTime = Gdx.graphics.getDeltaTime();
         boolean idle = true;
@@ -67,8 +85,10 @@ public class Player implements Entity {
         // if no movement, switch to idle animation
         if (idle) {
             currentAnimation = idleAnimation;
+        } else {
+            // move hitBox
+            this.hitBox = new Rectangle(x, y, sizeX, sizeY);
         }
-
     }
 
     @Override
@@ -81,8 +101,17 @@ public class Player implements Entity {
         tmp.translateX(this.x);
         tmp.translateY(this.y);
         return tmp;
+    }
 
+    @Override
+    public Rectangle getHitBox() {
+        return this.hitBox;
+    }
 
+    @Override
+    public void hitObstacle() {
+        this.x = previousX;
+        this.y = previousY;
     }
 
     @Override
@@ -103,13 +132,7 @@ public class Player implements Entity {
     @Override
     public void load() {
         this.atlas = new TextureAtlas(atlasPath);
-        if (this.atlas.getRegions().size != 0) {
-            this.textureHeight = this.atlas.getRegions().get(0).getTexture().getTextureData().getHeight();
-            this.textureWidth = this.atlas.getRegions().get(0).getTexture().getTextureData().getWidth();
-            System.out.println(this.textureHeight);
-        } else {
-            System.out.println("no textures present");
-        }
+
     }
 
     @Override
