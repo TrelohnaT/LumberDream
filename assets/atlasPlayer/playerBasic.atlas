@@ -1,0 +1,11 @@
+playerBasic.png
+size:1024,256
+repeat:none
+back
+bounds:132,2,128,128
+front
+bounds:392,2,128,128
+left
+bounds:262,2,128,128
+right
+bounds:2,2,128,128
