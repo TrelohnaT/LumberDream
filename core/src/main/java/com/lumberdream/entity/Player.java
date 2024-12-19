@@ -20,8 +20,8 @@ public class Player implements Entity {
     private final String rightWalk = "right_walk";
 
     private String id = "";
-    private float x = 4; // not pixels but tiles
-    private float y = 3; // not pixels but tiles
+    private float x = 0; // not pixels but tiles
+    private float y = 0; // not pixels but tiles
     private final float speed = 1.5f;
     private float textureHeight = 0;
     private float textureWidth = 0;

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.lumberdream.entity.Entity;
@@ -15,7 +16,6 @@ import com.lumberdream.tile.Grass;
 import com.lumberdream.tile.Tile;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +29,8 @@ public class Main implements ApplicationListener {
 
     private SpriteBatch spriteBatch;
 
+    Vector3 cameraVector = new Vector3();
+
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_NONE);
@@ -40,7 +42,9 @@ public class Main implements ApplicationListener {
 
             // init tile (background)
             //ToDo this should be in some kind of handler which will unload tile which cannot be seen
-            tileMap.put("grass", new Grass("grass", "background/background.atlas"));
+            tileMap.put("grass", new Grass("grass", "background/background.atlas", 0, 0));
+            tileMap.put("grass1", new Grass("grass1", "background/background.atlas", 1, 0));
+            tileMap.put("grass2", new Grass("grass2", "background/background.atlas", 2, 0));
 
         } catch (Exception e) {
             System.out.println("exception: " + e);
@@ -61,6 +65,13 @@ public class Main implements ApplicationListener {
         // update all entities
         this.entityMap.forEach((id, entity) -> entity.update(inputState));
 
+        // camera follows player character
+        Entity player = this.entityMap.get("player");
+        cameraVector.x = player.getX();
+        cameraVector.y = player.getY();
+        // alpha means speed which camera follow character
+        viewport.getCamera().position.lerp(cameraVector, 0.1f);
+
         // Draw your application here.
         ScreenUtils.clear(Color.WHITE);
         viewport.apply();
@@ -79,9 +90,9 @@ public class Main implements ApplicationListener {
         ShapeRenderer sr = new ShapeRenderer();
         sr.setProjectionMatrix(viewport.getCamera().combined);
         sr.begin(ShapeRenderer.ShapeType.Line);
-        sr.setColor(new Color(0,0,1,0));
+        sr.setColor(new Color(0, 0, 1, 0));
         this.entityMap.forEach((id, entity) -> {
-            sr.rect(entity.getX(), entity.getY(),1,1);
+            sr.rect(entity.getX(), entity.getY(), 1, 1);
         });
         sr.end();
 

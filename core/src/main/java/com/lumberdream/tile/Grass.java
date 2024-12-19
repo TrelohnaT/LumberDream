@@ -46,9 +46,10 @@ public class Grass implements Tile{
     public Sprite getSprite() {
         //ToDo grass will be animated, this is just place holder
         Sprite tmp = new Sprite(this.atlas.findRegion("grass_bg").getTexture());
+        // grass tile was multiplied only 2x
         tmp.setSize(1, 1);
-        tmp.translateX(0);
-        tmp.translateY(0);
+        tmp.translateX(this.x/2);
+        tmp.translateY(this.y);
         return tmp;
     }
 
