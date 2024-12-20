@@ -1,23 +1,24 @@
 package com.lumberdream.obstacle;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.lumberdream.Main;
 
 public class Tree implements Obstacle {
     private final String id;
 
-    private String atlasPath;
+    private final String atlasPath;
     private float x = 0;
     private float y = 0;
     private float sizeX = 1;
     private float sizeY = 1;
 
-    private Rectangle hitBox;
+    private final Rectangle hitBox;
 
 
     private TextureAtlas atlas;
@@ -31,7 +32,7 @@ public class Tree implements Obstacle {
         this.sizeY = sizeY;
 
         // hit box will be where the trunk is
-        this.hitBox = new Rectangle(x + sizeX/4, y, 1, 1);
+        this.hitBox = new Rectangle(x + sizeX / 4, y, 1, 1);
 
         this.load();
     }
@@ -53,8 +54,9 @@ public class Tree implements Obstacle {
 
     @Override
     public Sprite getSprite() {
-        //ToDo grass will be animated, this is just place holder
-        Sprite tmp = new Sprite(this.atlas.createSprite("oak"));
+        Animation<TextureRegion> animation = new Animation<>(1 / 3f, atlas.findRegions("oak_idleAnimation"));
+        TextureRegion tr = animation.getKeyFrame(Main.timeElapsed, true);
+        Sprite tmp = new Sprite(tr);
         tmp.setSize(this.sizeX, this.sizeY);
         tmp.translateX(this.x);
         tmp.translateY(this.y);

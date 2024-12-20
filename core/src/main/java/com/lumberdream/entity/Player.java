@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.lumberdream.Main;
 import com.lumberdream.handlers.InputHandler;
 
 import java.util.Map;
@@ -28,8 +29,6 @@ public class Player implements Entity {
     private float sizeY = 1;
     private final float speed = 1.5f;
 
-    private final float frameTime = 1 / 15f;
-    private float elapseTime = 0;
 
     private final String atlasPath;
     private TextureAtlas atlas;
@@ -93,9 +92,8 @@ public class Player implements Entity {
 
     @Override
     public Sprite getSprite() {
-        elapseTime += Gdx.graphics.getDeltaTime();
-        Animation<TextureRegion> animation = new Animation<>(frameTime, atlas.findRegions(currentAnimation));
-        TextureRegion tr = animation.getKeyFrame(elapseTime, true);
+        Animation<TextureRegion> animation = new Animation<>(1 / 15f, atlas.findRegions(currentAnimation));
+        TextureRegion tr = animation.getKeyFrame(Main.timeElapsed, true);
         Sprite tmp = new Sprite(tr);
         tmp.setSize(1, 1);
         tmp.translateX(this.x);

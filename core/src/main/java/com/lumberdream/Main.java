@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public class Main implements ApplicationListener {
 
+    public static float timeElapsed = 0;
+
     private final Map<String, Entity> entityMap = new HashMap<>();
     private final Map<String, Tile> tileMap = new HashMap<>();
     private final Map<String, Obstacle> obstacleMap = new HashMap<>();
@@ -71,7 +73,7 @@ public class Main implements ApplicationListener {
                 "tree",
                 new Tree(
                     "tree",
-                    "background/background.atlas",
+                    "tree/Tree.atlas",
                     0,
                     0,
                     2,
@@ -93,6 +95,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void render() {
+        timeElapsed += Gdx.graphics.getDeltaTime();
         Map<String, Boolean> inputState = InputHandler.getState();
 
         // update all entities
