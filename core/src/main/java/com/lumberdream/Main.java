@@ -15,10 +15,10 @@ import com.lumberdream.entity.Player;
 import com.lumberdream.handlers.InputHandler;
 import com.lumberdream.obstacle.Obstacle;
 import com.lumberdream.obstacle.Tree;
-import com.lumberdream.tile.Grass;
-import com.lumberdream.tile.Tile;
+import com.lumberdream.tile.BackGroundManager;
+import com.lumberdream.utils.BackgroundConfig;
+import com.lumberdream.utils.Utils;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,13 +30,14 @@ public class Main implements ApplicationListener {
     public static float timeElapsed = 0;
 
     private final Map<String, Entity> entityMap = new HashMap<>();
-    private final Map<String, Tile> tileMap = new HashMap<>();
+
     private final Map<String, Obstacle> obstacleMap = new HashMap<>();
     ExtendViewport viewport;
 
     private SpriteBatch spriteBatch;
-
     Vector3 cameraVector = new Vector3();
+
+    private BackGroundManager backGroundManager;
 
     @Override
     public void create() {
@@ -50,32 +51,20 @@ public class Main implements ApplicationListener {
                 new Player(
                     "player",
                     "atlasPlayerMove/playerMove.atlas",
-                    -1,
-                    0,
+                    5,
+                    5,
                     1,
                     1
                 )
             );
-
-            // init tile (background)
-            //ToDo this should be in some kind of handler which will unload tile which cannot be seen
-            tileMap.put("grass00", new Grass("grass00", "background/background.atlas", 0, 0));
-            tileMap.put("grass10", new Grass("grass10", "background/background.atlas", 1, 0));
-            tileMap.put("grass01", new Grass("grass01", "background/background.atlas", 0, 1));
-            tileMap.put("grass11", new Grass("grass11", "background/background.atlas", 1, 1));
-            tileMap.put("grass20", new Grass("grass20", "background/background.atlas", 2, 0));
-            tileMap.put("grass21", new Grass("grass21", "background/background.atlas", 2, 1));
-            tileMap.put("grass02", new Grass("grass02", "background/background.atlas", 0, 2));
-            tileMap.put("grass12", new Grass("grass12", "background/background.atlas", 1, 2));
-            tileMap.put("grass22", new Grass("grass22", "background/background.atlas", 2, 2));
 
             obstacleMap.put(
                 "tree",
                 new Tree(
                     "tree",
                     "tree/Tree.atlas",
-                    0,
-                    0,
+                    1,
+                    1,
                     2,
                     2
                 )
@@ -85,6 +74,11 @@ public class Main implements ApplicationListener {
             System.out.println("exception: " + e);
         }
         spriteBatch = new SpriteBatch();
+        backGroundManager = new BackGroundManager(20, 10);
+        backGroundManager.generateBackground("grass_bg", "background/background.atlas");
+
+        System.out.println(Utils.getConfing(BackgroundConfig.path, BackgroundConfig.class).str);
+
     }
 
     @Override
@@ -108,8 +102,8 @@ public class Main implements ApplicationListener {
 
         // handle collision
 
-        for(var entry : this.obstacleMap.entrySet()) {
-            if(player.getHitBox().overlaps(entry.getValue().getHitBox())) {
+        for (var entry : this.obstacleMap.entrySet()) {
+            if (player.getHitBox().overlaps(entry.getValue().getHitBox())) {
                 System.out.println("hit");
                 player.hitObstacle();
             }
@@ -126,7 +120,7 @@ public class Main implements ApplicationListener {
 
         spriteBatch.begin();
         // background will be draw first
-        this.tileMap.forEach((id, tile) -> tile.getSprite().draw(spriteBatch));
+        this.backGroundManager.getTileMap().forEach((id, tile) -> tile.getSprite().draw(spriteBatch));
 
         // draw entities on screen
         this.entityMap.forEach((id, entity) -> entity.getSprite().draw(spriteBatch));

@@ -1,13 +1,11 @@
 package com.lumberdream.obstacle;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.lumberdream.Main;
 
 public class Tree implements Obstacle {
     private final String id;
@@ -55,7 +53,8 @@ public class Tree implements Obstacle {
     @Override
     public Sprite getSprite() {
         Animation<TextureRegion> animation = new Animation<>(1 / 3f, atlas.findRegions("oak_idleAnimation"));
-        TextureRegion tr = animation.getKeyFrame(Main.timeElapsed, true);
+        // tree is not animated - animation looks like goo not like tree
+        TextureRegion tr = animation.getKeyFrame(1, true);
         Sprite tmp = new Sprite(tr);
         tmp.setSize(this.sizeX, this.sizeY);
         tmp.translateX(this.x);
